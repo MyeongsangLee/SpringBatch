@@ -16,9 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * desc : Hello World를 출력
+ * run : --spring.batch.job.names=helloWorldJob
+ */
 @Configuration
 @RequiredArgsConstructor
-public class HelloWorldConfig {
+public class HelloWorldJobConfig {
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
@@ -27,7 +31,7 @@ public class HelloWorldConfig {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job HelloWorldJob() {
+    public Job helloWorldJob() {
         return jobBuilderFactory.get("helloWorldJob")
                 .incrementer(new RunIdIncrementer())
                 .start(helloWorldStep())
