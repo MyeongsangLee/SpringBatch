@@ -29,10 +29,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class ValidatedParamJobConfig {
 
-    @Autowired
     private JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean

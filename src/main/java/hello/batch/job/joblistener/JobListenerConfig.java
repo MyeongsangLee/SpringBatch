@@ -29,16 +29,14 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class JobListenerConfig {
 
-    @Autowired
     private JobBuilderFactory jobBuilderFactory;
-
-    @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
     public Job jobListenerJob(Step jobListenerStep) {
         return jobBuilderFactory.get("jobListenerJob")
                 .incrementer(new RunIdIncrementer())
+                .listener(new JobLoggerListener())
                 .start(jobListenerStep)
                 .build();
     }
@@ -61,6 +59,7 @@ public class JobListenerConfig {
 //                System.out.println(fileName);
                 System.out.println("Job Listener Tasklet");
                 return RepeatStatus.FINISHED;
+                //throw new Exception("Failed !!!!");
             }
         };
     }
