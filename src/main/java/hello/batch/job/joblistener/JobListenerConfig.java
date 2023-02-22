@@ -29,7 +29,9 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class JobListenerConfig {
 
+    @Autowired
     private JobBuilderFactory jobBuilderFactory;
+    @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
