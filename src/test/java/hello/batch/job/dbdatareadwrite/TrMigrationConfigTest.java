@@ -1,8 +1,10 @@
 package hello.batch.job.dbdatareadwrite;
 
 import hello.batch.core.domain.accounts.AccountsRepository;
+import hello.batch.core.domain.orders.Orders;
 import hello.batch.core.domain.orders.OrdersRepository;
-import hello.batch.job.helloworld.SpringBatchTestConfig;
+import hello.batch.SpringBatchTestConfig;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -28,9 +30,14 @@ class TrMigrationConfigTest {
 
     @Autowired
     private OrdersRepository ordersRepository;
-
     @Autowired
     private AccountsRepository accountsRepository;
+
+    @AfterEach
+    public void cleanUpEach() {
+        ordersRepository.deleteAll();
+        accountsRepository.deleteAll();
+    }
 
     @Test()
     public void success_noData() throws Exception {
@@ -41,5 +48,22 @@ class TrMigrationConfigTest {
         Assertions.assertEquals(execution.getExitStatus(), ExitStatus.COMPLETED);
         Assertions.assertEquals(0, accountsRepository.count());
 
+    }
+
+    @Test()
+    public void success_existData() throws Exception {
+        // given
+        Orders orders1 = new Orders(null, "kakao gift", 15000, new Date());
+        Orders orders2 = new Orders(null, "naver gift", 15000, new Date());
+
+        ordersRepository.save(orders1);
+        ordersRepository.save(orders2);
+
+        // when
+        JobExecution execution = jobLauncherTestUtils.launchJob();
+
+        // then
+        Assertions.assertEquals(execution.getExitStatus(), ExitStatus.COMPLETED);
+        Assertions.assertEquals(2, accountsRepository.count());
     }
 }
